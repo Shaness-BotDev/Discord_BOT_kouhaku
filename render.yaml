@@ -1,8 +1,5 @@
-# render.yaml
 services:
   - type: web
     name: kouhaku-bot
-    env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "python bot/discord_bot.py"
-    pythonVersion: 3.11
+    env: docker
+    dockerfilePath: Dockerfile
