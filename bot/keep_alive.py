@@ -1,8 +1,11 @@
-from bot.discord_bot import GamingBot
-from config.settings import load_settings
+from flask import Flask
+from threading import Thread
 
-if __name__ == "__main__":
-    keep_alive()  # ← ダミーWebサーバー起動
-    settings = load_settings()
-    bot = GamingBot()
-    bot.run(settings["DISCORD_TOKEN"])
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Bot is alive!"
+
+def keep_alive():
+    Thread(target=app.run, kwargs={"host": "0.0.0.0", "port": 8080}).start()
