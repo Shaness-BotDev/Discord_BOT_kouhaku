@@ -3,14 +3,6 @@ from discord.ext import commands
 import json
 import os
 
-intents = discord.Intents.default()
-intents.message_content = True
-intents.voice_states = True
-intents.members = True
-
-bot = commands.Bot(command_prefix="!", intents=intents)
-
-# ✅ configの読み込み（ファイルがなければ初期化）
 CONFIG_PATH = "config.json"
 
 def load_config():
@@ -24,24 +16,25 @@ def load_config():
             "defense_channel_name": "防衛VC"
         }
 
-def save_config():
+def save_config(bot):
     with open(CONFIG_PATH, "w", encoding="utf-8") as f:
         json.dump(bot.config, f, indent=4, ensure_ascii=False)
 
-bot.config = load_config()
-bot.save_config = save_config
+class CustomBot(commands.Bot):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.config = load_config()
+        self.save_config = lambda: save_config(self)
 
-# ✅ Bot起動時のログ
-@bot.event
-async def on_ready():
-    print(f"✅ Logged in as {bot.user} (ID: {bot.user.id})")
-    print("------")
+    async def setup_hook(self):
+        await self.load_extension("cogs.gaming")  # ← Cogをここで読み込む
 
-# ✅ Cogの読み込み（gaming.pyが cogs フォルダにある前提）
-async def load_cogs():
-    await bot.load_extension("cogs.gaming")
+intents = discord.Intents.default()
+intents.message_content = True
+intents.voice_states = True
+intents.members = True
 
-# ✅ Bot起動関数（main.pyから呼ばれる）
+bot = CustomBot(command_prefix="!", intents=intents)
+
 def run_bot():
-    bot.loop.create_task(load_cogs())
     bot.run(os.getenv("DISCORD_TOKEN"))
