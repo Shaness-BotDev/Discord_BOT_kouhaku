@@ -3,9 +3,11 @@ services:
     name: kouhaku-bot
     env: docker
     dockerfilePath: Dockerfile
+    startCommand: python main.py  # ← これが超重要！
     buildFilter:
       paths:
         - Dockerfile
         - render.yaml
         - requirements.txt
+        - main.py
         - bot/
