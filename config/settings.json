@@ -1,0 +1,7 @@
+{
+  "default_prefix": "!",
+  "excluded_user_ids": [],
+  "attack_channel_name": "紅白A(攻撃)",
+  "defense_channel_name": "紅白B(防衛)"
+}
+
