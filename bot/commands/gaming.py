@@ -3,13 +3,14 @@ from discord.ext import commands
 import random
 
 class GamingCommands(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot, config):
         self.bot = bot
+        self.config = config
 
     @commands.command(name="split", aliases=["紅白"])
     async def split_teams(self, ctx):
         """VC参加者を攻撃・防衛に分け、指定VCへ移動します"""
-        config = self.bot.config
+        config = self.config
         excluded_ids = config.get("excluded_user_ids", [])
         vc = ctx.author.voice.channel if ctx.author.voice else None
 
@@ -47,13 +48,13 @@ class GamingCommands(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def exclude_user(self, ctx, member: discord.Member):
         """指定ユーザーを除外リストに追加します"""
-        excluded = self.bot.config.get("excluded_user_ids", [])
+        excluded = self.config.get("excluded_user_ids", [])
         if member.id in excluded:
             await ctx.send(f"⚠️ {member.display_name} はすでに除外されています。")
             return
 
         excluded.append(member.id)
-        self.bot.config["excluded_user_ids"] = excluded
+        self.config["excluded_user_ids"] = excluded
         self.bot.save_config()
         await ctx.send(f"✅ {member.display_name} を除外リストに追加しました。")
 
@@ -61,13 +62,13 @@ class GamingCommands(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def include_user(self, ctx, member: discord.Member):
         """除外リストから指定ユーザーを復帰させます"""
-        excluded = self.bot.config.get("excluded_user_ids", [])
+        excluded = self.config.get("excluded_user_ids", [])
         if member.id not in excluded:
             await ctx.send(f"⚠️ {member.display_name} は除外されていません。")
             return
 
         excluded.remove(member.id)
-        self.bot.config["excluded_user_ids"] = excluded
+        self.config["excluded_user_ids"] = excluded
         self.bot.save_config()
         await ctx.send(f"✅ {member.display_name} を除外リストから削除しました。")
 
@@ -75,7 +76,7 @@ class GamingCommands(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def show_excluded(self, ctx):
         """現在の除外リストを表示します"""
-        excluded_ids = self.bot.config.get("excluded_user_ids", [])
+        excluded_ids = self.config.get("excluded_user_ids", [])
         if not excluded_ids:
             await ctx.send("📭 除外リストは空です。")
             return
@@ -89,6 +90,6 @@ class GamingCommands(commands.Cog):
         embed.description = "\n".join(members)
         await ctx.send(embed=embed)
 
-# ✅ 非同期でCogを登録するように修正
+# ✅ 非同期でCogを登録するように修正（configを渡す）
 async def setup(bot):
-    await bot.add_cog(GamingCommands(bot))
+    await bot.add_cog(GamingCommands(bot, bot.config))
