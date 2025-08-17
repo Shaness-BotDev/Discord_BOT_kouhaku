@@ -1,5 +1,5 @@
 from bot.discord_bot import GamingBot
-from bot.config.settings import load_settings
+from config.settings import load_settings
 from bot.keep_alive import keep_alive  # ← 追加！
 
 if __name__ == "__main__":
