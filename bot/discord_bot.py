@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from bot.config.settings import load_settings  # ← 絶対インポートに戻す！
+from bot.config.settings import load_settings  # 絶対インポートで安定性UP
 
 class GamingBot(commands.Bot):
     def __init__(self):
@@ -20,3 +20,9 @@ class GamingBot(commands.Bot):
 
     async def on_ready(self):
         print(f"✅ Logged in as {self.user} (ID: {self.user.id})")
+
+def run_bot():
+    settings = load_settings()
+    token = settings["DISCORD_TOKEN"]
+    bot = GamingBot()
+    bot.run(token)
