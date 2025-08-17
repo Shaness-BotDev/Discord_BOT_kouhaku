@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from .config.settings import load_settings  # ← 相対インポートに変更！
+from bot.config.settings import load_settings  # ← 絶対インポートに戻す！
 
 class GamingBot(commands.Bot):
     def __init__(self):
