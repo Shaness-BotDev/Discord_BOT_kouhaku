@@ -1,7 +1,6 @@
-from bot.discord_bot import GamingBot
-from bot.config.settings import load_settings  # ← トークン取得！
+from bot.keep_alive import keep_alive
+from bot.discord_bot import run_bot
 
 if __name__ == "__main__":
-    settings = load_settings()
-    bot = GamingBot()
-    bot.run(settings["DISCORD_TOKEN"])
+    keep_alive()     # Render用のダミーWebサーバー起動
+    run_bot()        # Discord Bot起動
