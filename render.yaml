@@ -11,3 +11,6 @@ services:
         - requirements.txt
         - main.py
         - bot/
+    envVars:
+      - key: DISCORD_TOKEN
+        value: ${DISCORD_TOKEN}
