@@ -1,6 +1,5 @@
 from bot.discord_bot import GamingBot
 from config.settings import load_settings
-from bot.keep_alive import keep_alive  # ← 追加！
 
 if __name__ == "__main__":
     keep_alive()  # ← ダミーWebサーバー起動
