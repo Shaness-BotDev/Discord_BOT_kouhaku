@@ -89,5 +89,6 @@ class GamingCommands(commands.Cog):
         embed.description = "\n".join(members)
         await ctx.send(embed=embed)
 
-def setup(bot):
-    bot.add_cog(GamingCommands(bot))
+# ✅ 非同期でCogを登録するように修正
+async def setup(bot):
+    await bot.add_cog(GamingCommands(bot))
