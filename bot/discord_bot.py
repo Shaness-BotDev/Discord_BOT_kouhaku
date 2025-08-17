@@ -4,6 +4,10 @@ import logging
 import json
 from pathlib import Path
 
+# 🔌 Render Free Tier対応：ダミーWebサーバー起動
+from keep_alive import keep_alive
+keep_alive()
+
 from bot.commands.gaming import GamingCommands
 
 class GamingBot(commands.Bot):
@@ -41,3 +45,8 @@ class GamingBot(commands.Bot):
     async def on_ready(self):
         print(f"✅ Logged in as {self.user}")
         print(f"📡 Connected to {len(self.guilds)} guild(s)")
+
+# 🧠 Botインスタンス生成＆起動
+if __name__ == "__main__":
+    bot = GamingBot()
+    bot.run(bot.config.get("DISCORD_TOKEN"))
