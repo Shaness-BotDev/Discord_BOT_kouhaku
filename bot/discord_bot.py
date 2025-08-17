@@ -23,6 +23,6 @@ class GamingBot(commands.Bot):
 
 def run_bot():
     settings = load_settings()
-    token = settings["DISCORD_TOKEN"]
+    token = settings["DISCORD_BOT_TOKEN"]
     bot = GamingBot()
     bot.run(token)
