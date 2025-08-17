@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from bot.config.settings import load_settings  # 絶対インポートで安定性UP
+from config.settings import load_settings  # ← これでOK！
 
 class GamingBot(commands.Bot):
     def __init__(self):
