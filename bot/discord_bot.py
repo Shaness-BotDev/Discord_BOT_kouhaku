@@ -1,28 +1,47 @@
 import discord
 from discord.ext import commands
-from config.settings import load_settings  # ← これでOK！
+import json
+import os
 
-class GamingBot(commands.Bot):
-    def __init__(self):
-        intents = discord.Intents.default()
-        intents.message_content = True
-        intents.guilds = True
-        intents.members = True
+intents = discord.Intents.default()
+intents.message_content = True
+intents.voice_states = True
+intents.members = True
 
-        super().__init__(command_prefix="!", intents=intents)
+bot = commands.Bot(command_prefix="!", intents=intents)
 
-    async def setup_hook(self):
-        try:
-            await self.load_extension("bot.commands.gaming")
-            print("✅ Loaded extension: bot.commands.gaming")
-        except Exception as e:
-            print(f"❌ Failed to load gaming cog: {e}")
+# ✅ configの読み込み（ファイルがなければ初期化）
+CONFIG_PATH = "config.json"
 
-    async def on_ready(self):
-        print(f"✅ Logged in as {self.user} (ID: {self.user.id})")
+def load_config():
+    if os.path.exists(CONFIG_PATH):
+        with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    else:
+        return {
+            "excluded_user_ids": [],
+            "attack_channel_name": "攻撃VC",
+            "defense_channel_name": "防衛VC"
+        }
 
+def save_config():
+    with open(CONFIG_PATH, "w", encoding="utf-8") as f:
+        json.dump(bot.config, f, indent=4, ensure_ascii=False)
+
+bot.config = load_config()
+bot.save_config = save_config
+
+# ✅ Bot起動時のログ
+@bot.event
+async def on_ready():
+    print(f"✅ Logged in as {bot.user} (ID: {bot.user.id})")
+    print("------")
+
+# ✅ Cogの読み込み（gaming.pyが cogs フォルダにある前提）
+async def load_cogs():
+    await bot.load_extension("cogs.gaming")
+
+# ✅ Bot起動関数（main.pyから呼ばれる）
 def run_bot():
-    settings = load_settings()
-    token = settings["DISCORD_BOT_TOKEN"]
-    bot = GamingBot()
-    bot.run(token)
+    bot.loop.create_task(load_cogs())
+    bot.run(os.getenv("DISCORD_TOKEN"))
