@@ -2,7 +2,7 @@ import os
 
 def load_settings():
     settings = {
-        "DISCORD_TOKEN": os.getenv("DISCORD_TOKEN")
+        "DISCORD_TOKEN": os.getenv("DISCORD_BOT_TOKEN")
     }
 
     if not settings["DISCORD_TOKEN"]:
