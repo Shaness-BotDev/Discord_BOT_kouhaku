@@ -12,4 +12,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Botを起動
-CMD ["python", "bot/discord_bot.py"]
+CMD ["python", "main.py"]
